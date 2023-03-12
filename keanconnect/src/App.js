@@ -32,7 +32,17 @@ function App() {
       </header>
 
       <section>
-        {user ? <ChatRoom /> : <SignIn />}
+        <div className='navbar'>
+          {<SignOut/>}
+        </div>
+        <div className="Main-Section">
+          <div className='Navegation-Panel'>
+            {
+              <DisplayChats />
+            }
+          </div>
+          <div className='Chat-Section'>{user ? <ChatRoom /> : <SignIn />}</div>
+        </div>
       </section>
     </div>
   );
@@ -54,6 +64,7 @@ function SignIn(){
 function SignOut(){
   return auth.currentUser && (
     <button onClick ={() => auth.signOut()}> Sign Out</button>
+    
   )
 }
 
@@ -119,6 +130,25 @@ function ChatMessage(props){
   </>)
 }
 
+function DisplayChats() {
+  const [collections, setCollections] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = db.listCollections().then(collections => {
+      setCollections(collections.map(col => col.id));
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  return (
+      <ul>
+        {collections.map(col => (
+          <li key={col}>{col}</li>
+        ))}
+      </ul>
+  );
+}
 
 export default App;
  
