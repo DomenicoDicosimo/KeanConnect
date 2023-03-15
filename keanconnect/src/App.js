@@ -39,8 +39,7 @@ function App() {
             {
             }
           </div>
-          <div className='Chat-Section'>{user ? <ChatRoom /> : <SignIn />}</div>
-		<div className="Message-Section"><NewMessage /></div>
+          {user ? <ChatRoom /> : <SignIn />}
         </div>
       </section>
     </div>
@@ -88,7 +87,7 @@ function SignOut(){
 }
 
 function ChatRoom(){
-
+  const dummy = useRef();
   const messagesRef = firestore.collection('messages');
   const query = messagesRef.orderBy('createdAt');
 
@@ -111,64 +110,34 @@ function ChatRoom(){
     })
 
     setFormValue('');
+	dummy.current.scrollIntoView({behavior: 'smooth'});
     
   }
 
   //loops over each document, passes document data as the message prop
   //input value binds state to form input
   return(<>
+	<div className='Chat-Section'>
     <main>
       {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
 
-      <div id="bottom"></div>
+      <div ref={dummy}></div>
     </main>
-  
+	</div>
+	<div className="Message-Section">
+		<form class="text-container" onSubmit={sendMessage}>
+		<div class="text-box-div">
+		<input type="textarea" value = {formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Send Message"  cols="20" rows="20" required/>
+		</div>
+		<div class="submit-button-div">
+		<button type = "submit" class="submit-btn" disabled={!formValue}>Send</button>
+		</div>
+		</form>
+	</div>
   </>
   )
 }
-function NewMessage()
-{
-  //pulls the last 25 messages from the chat app
-  const bottom = document.getElementById('bottom');
 
-  const messagesRef = firestore.collection('messages');
-  const query = messagesRef.orderBy('createdAt');
-
-  //reacts to changes in real time
-  const [messages] = useCollectionData(query,{idField: 'id'});
-
-  const [formValue, setFormValue] = useState('');
-
-  const sendMessage = async(e) => {
-    //prevents data being reset on refresh
-    e.preventDefault();
-
-    const { uid, photoURL} = auth.currentUser;
-
-    await messagesRef.add({
-      text: formValue,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      uid,
-      photoURL
-    })
-
-    setFormValue('');
-	
-	
-  }
-
-  //loops over each document, passes document data as the message prop
-  //input value binds state to form input
-
-  return(
-	<>
-		<form onSubmit={sendMessage}>
-		<input value = {formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Send Message"/>
-		<button type = "submit" disabled={!formValue}>Send</button>
-		  </form>
-	</>
-  );
-}
 function ChatMessage(props){
 
   const {text, uid, photoURL} = props.message;

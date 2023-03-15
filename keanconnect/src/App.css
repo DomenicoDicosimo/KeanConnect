@@ -9,7 +9,7 @@
 .Navegation-Panel{
 	float:left;
 	width:15%;
-	height:285%;
+	height:100%;
 	background-color:white;
   border-right: 5px solid black;
 	display:flex;
@@ -17,7 +17,7 @@
 .Chat-Section{
 	float:right;
 	width:75%;
-	height:85vh;
+	height:25%;
 	max-height:85vh;
 	overflow: scroll;
 	background-color:gray;
@@ -30,8 +30,6 @@
 	float:right;
 	width:75%;
 	height:24vh;
-	max-height:85vh;
-	overflow: scroll;
 	background-color:white;
 	border-bottom: 5px solid black;
 	border-left: 5px solid black;
@@ -204,8 +202,8 @@ button {
 	top:50%;
 	left:50%;
 	transform: translate(-50%,-50%);
-	width: 50%;
-	height: 50%;
+	width: 80%;
+	height: 80%;
 	align-items:center;
 	justify-content:center;
 	background-image: url("../public/logowhitesmall.png");
@@ -247,3 +245,34 @@ button {
 .Login-Button:hover{ opacity: 1;}
 
 .navText{color:"white";}
+
+.text-container input[type=textarea]{
+	width:100%;
+	height: 100%;
+	border: none;
+	background: #F1F1F1;
+}
+.text-container{
+	width:100%;
+	height: 100%;
+	background: #F1F1F1;
+}
+
+.text-box-div{
+	float:left;
+	width:80%;
+	height:100%;
+	background-color:white;
+	display:flex;
+}
+.submit-button-div{
+	float:right;
+	width:20%;
+	height:100%;
+	display:flex;
+}
+.submit-button-div .submit-btn{
+	backround-color: greenyellow;
+	width:100%;
+	height:100%;
+}
