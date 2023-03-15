@@ -5,6 +5,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import 'firebase/compat/auth';
 
+
 import { useAuthState, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
@@ -32,12 +33,32 @@ function App() {
       </header>
 
       <section>
-        {user ? <ChatRoom /> : <SignIn />}
+		<NavBar />
+        <div className="Main-Section">
+          <div className='Navegation-Panel'>
+            {
+            }
+          </div>
+          {user ? <ChatRoom /> : <SignIn />}
+        </div>
       </section>
     </div>
   );
 }
 
+function NavBar(){
+	   return(
+		<>
+			 <div className='navbar'>
+			 <span className="navText">Kean Connect</span>
+			<div className = "navlogo">
+				<img src="../public/logogreysmall.png"  alt="" />
+			 </div>
+			<SignOut/>
+			</div>
+		</>
+	   );
+}
 function SignIn(){
   const useSignInWithGoogle = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -46,23 +67,29 @@ function SignIn(){
 
   return(
     <>
-      <button onClick={useSignInWithGoogle}>Sign in with Google</button>
+	<div className = "Form-Container">
+		<div className = "Form-Header">
+			<h1>Welcome to Kean Connect! Please Sign In:</h1>
+		</div>
+		<div className="Form-Wrapper">
+			<button className="Login-Button" onClick={useSignInWithGoogle}>Sign in with Google</button>
+		</div>
+	</div>
     </>
   )
 }
 
 function SignOut(){
   return auth.currentUser && (
-    <button onClick ={() => auth.signOut()}> Sign Out</button>
+    <button onClick ={() => auth.signOut()} className="Logout-Button"> Sign Out</button>
+    
   )
 }
 
 function ChatRoom(){
-  //pulls the last 25 messages from the chat app
   const dummy = useRef();
-
   const messagesRef = firestore.collection('messages');
-  const query = messagesRef.orderBy('createdAt').limit(25);
+  const query = messagesRef.orderBy('createdAt');
 
   //reacts to changes in real time
   const [messages] = useCollectionData(query,{idField: 'id'});
@@ -83,25 +110,30 @@ function ChatRoom(){
     })
 
     setFormValue('');
+	dummy.current.scrollIntoView({behavior: 'smooth'});
     
-    dummy.current.scrollIntoView({behavior: 'smooth'});
   }
 
   //loops over each document, passes document data as the message prop
   //input value binds state to form input
   return(<>
+	<div className='Chat-Section'>
     <main>
       {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
 
       <div ref={dummy}></div>
     </main>
-  
-    <form onSubmit={sendMessage}>
-
-      <input value = {formValue} onChange={(e) => setFormValue(e.target.value)} />
-
-      <button type = "submit" disabled={!formValue}>Send</button>
-    </form>
+	</div>
+	<div className="Message-Section">
+		<form class="text-container" onSubmit={sendMessage}>
+		<div class="text-box-div">
+		<input type="textarea" value = {formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Send Message"  cols="20" rows="20" required/>
+		</div>
+		<div class="submit-button-div">
+		<button type = "submit" class="submit-btn" disabled={!formValue}>Send</button>
+		</div>
+		</form>
+	</div>
   </>
   )
 }
@@ -113,11 +145,12 @@ function ChatMessage(props){
   const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
   return (<>
     <div className = {`message ${messageClass}`}>
-      <img src = {photoURL} />
+      <img src = {photoURL} alt=""/>
       <p>{text}</p>
     </div>
   </>)
 }
+
 
 
 export default App;
