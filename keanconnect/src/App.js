@@ -30,6 +30,7 @@ function App() {
     <div className="App">
       <header>
         
+		<a href="http://eve.kean.edu/~santosk1/emailtest/contactform.html">Link to other page</a>
       </header>
 
       <section>
@@ -117,23 +118,25 @@ function ChatRoom(){
   //loops over each document, passes document data as the message prop
   //input value binds state to form input
   return(<>
-	<div className='Chat-Section'>
-    <main>
-      {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
+	<div className="Message-UI-Section">
+		   <div className='Chat-Section'>
+		  <main>
+		    {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
 
-      <div ref={dummy}></div>
-    </main>
-	</div>
-	<div className="Message-Section">
-		<form class="text-container" onSubmit={sendMessage}>
-		<div class="text-box-div">
-		<input type="textarea" value = {formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Send Message"  cols="20" rows="20" required/>
+		    <div ref={dummy}></div>
+		  </main>
+		   </div>
+		   <div className="Message-Section">
+			   <form class="text-container" onSubmit={sendMessage}>
+			   <div class="text-box-div">
+			   <input type="textarea" value = {formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Send Message"  cols="20" rows="20" required/>
+			   </div>
+			   <div class="submit-button-div">
+			   <button type = "submit" class="submit-btn" disabled={!formValue}>Send</button>
+			   </div>
+			   </form>
+		   </div>
 		</div>
-		<div class="submit-button-div">
-		<button type = "submit" class="submit-btn" disabled={!formValue}>Send</button>
-		</div>
-		</form>
-	</div>
   </>
   )
 }
