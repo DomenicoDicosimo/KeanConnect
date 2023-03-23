@@ -14,35 +14,31 @@
   border-right: 5px solid black;
 	display:flex;
 }
+
 .Chat-Section{
 	
 	width:100%;
-	height:85vh;
+	height:65%;
 	max-height:85vh;
 	overflow: scroll;
 	background-color:gray;
 	border-bottom: 5px solid black;
 	border-left: 5px solid black;
+	padding-left: 5%;
+	padding-right: 5%;
 	scroll-behavior: smooth;
-	display:flex;
 }
 .Message-UI-Section{
 	float:right;
 	width:75%;
 	height:100%;
 	background-color:white;
-	border-bottom: 5px solid black;
-	border-left: 5px solid black;
-	display:flex;
 }
 
 .Message-Section{
 	width:100%;
-	height:;
+	height:35%;
 	background-color:white;
-	border-bottom: 5px solid black;
-	border-left: 5px solid black;
-	display:flex;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -257,31 +253,77 @@ button {
 
 .text-container input[type=textarea]{
 	width:100%;
-	height: 100%;
-	border: none;
+	height: 10vh;
 	background: #F1F1F1;
+	word-break:break-all;
+	word-wrap:break-word;
+	vertical-align:top;
 }
 .text-container{
 	width:100%;
-	height: 100%;
+	height: fit-content;
 	background: #F1F1F1;
 }
 
 .text-box-div{
 	float:left;
-	width:80%;
+	width:90%;
 	height:100%;
 	background-color:white;
 	display:flex;
+	overflow-wrap:break-word;
+	vertical-align:top;
 }
 .submit-button-div{
 	float:right;
-	width:20%;
+	width:10%;
+	color:#1F355A;
+	background:white;
 	height:100%;
 	display:flex;
 }
 .submit-button-div .submit-btn{
-	backround-color: greenyellow;
 	width:100%;
 	height:100%;
 }
+.submit-button-div .submit-btn:hover{
+	background:#1F355A;
+	color:white;
+}
+.message-sent{
+	   width:auto;
+	   height:auto;
+	   max-width:40%;
+	   max-width:40%;
+	   min-height:10%;
+	   min-width:5%;
+	   float:right;
+	   background-color:#1F355A;
+	   color:white;
+	   text-align:left;
+	   border-radius: 15px;
+	   padding-bottom:10px;
+	   clear:both;
+	   padding:4px;
+}
+.msg-txt{
+	   font-weight:bold;
+	word-wrap:break-word;
+}
+.message-received p{
+	display:inline-block;
+}
+.message-received{
+	   width:auto;
+	   height:auto;
+	   max-width:40%;
+	   float:left;
+	   text-align:left;
+	   min-height:10%;
+	   min-width:5%;
+	   background-color:white;
+	   border-radius: 15px;
+	   padding-bottom:10px;
+	   clear:both;
+}
+

@@ -36,9 +36,8 @@ function App() {
       <section>
 		<NavBar />
         <div className="Main-Section">
-          <div className='Navegation-Panel'>
-            {
-            }
+          <div id='navpanel' className='Navegation-Panel'>
+           
           </div>
           {user ? <ChatRoom /> : <SignIn />}
         </div>
@@ -88,7 +87,7 @@ function SignOut(){
 }
 
 function ChatRoom(){
-  const dummy = useRef();
+	var cSectionDiv = document.getElementById('cssec');
   const messagesRef = firestore.collection('messages');
   const query = messagesRef.orderBy('createdAt');
 
@@ -111,21 +110,16 @@ function ChatRoom(){
     })
 
     setFormValue('');
-	dummy.current.scrollIntoView({behavior: 'smooth'});
+	cSectionDiv.scrollTop = cSectionDiv.scrollHeight;
     
   }
-
   //loops over each document, passes document data as the message prop
   //input value binds state to form input
   return(<>
 	<div className="Message-UI-Section">
-		   <div className='Chat-Section'>
-		  <main>
-		    {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
-
-		    <div ref={dummy}></div>
-		  </main>
-		   </div>
+		   <div className='Chat-Section' id='cssec'>
+				{messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
+		  </div>
 		   <div className="Message-Section">
 			   <form class="text-container" onSubmit={sendMessage}>
 			   <div class="text-box-div">
@@ -146,15 +140,19 @@ function ChatMessage(props){
   const {text, uid, photoURL} = props.message;
 
   const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
+  const alignVal = messageClass ==="sent" ? 'right' : 'left';
   return (<>
-    <div className = {`message ${messageClass}`}>
-      <img src = {photoURL} alt=""/>
-      <p>{text}</p>
+    <div className = {`message-${messageClass}`} align={alignVal}>
+		    <img src = {photoURL} className='pfp' alt="" width='20' height = '20'/>
+		    <p className='msg-txt'>{text}</p>
     </div>
   </>)
 }
 
+function GetChats(){
 
+
+}
 
 export default App;
  
