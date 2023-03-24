@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState,useEffect} from 'react';
 import './App.css';
 
 import firebase from 'firebase/compat/app';
@@ -25,7 +25,7 @@ const firestore = firebase.firestore();
 function App() {
 
   const [user] = useAuthState(auth);
-
+  //const [currentRoom, setCurrentRoom] = useState[""];
   return (
     <div className="App">
       <header>
@@ -36,9 +36,7 @@ function App() {
       <section>
 		<NavBar />
         <div className="Main-Section">
-          <div id='navpanel' className='Navegation-Panel'>
-           
-          </div>
+
           {user ? <ChatRoom /> : <SignIn />}
         </div>
       </section>
@@ -87,10 +85,18 @@ function SignOut(){
 }
 
 function ChatRoom(){
-	var cSectionDiv = document.getElementById('cssec');
-  const messagesRef = firestore.collection('messages');
+  var cSectionDiv = document.getElementById('cssec');
+  var currCID = 'CPS1231';
+  const messagesRef = firestore.collection(`Chats/${currCID}/messages/`);
   const query = messagesRef.orderBy('createdAt');
-
+  let CIDS = []
+	   firestore.collection("Chats").get()
+	   .then(querySnapshot => {
+		  querySnapshot.forEach(doc => {
+			 CIDS.push(doc.id);
+		  });
+	   });
+	console.log(CIDS);
   //reacts to changes in real time
   const [messages] = useCollectionData(query,{idField: 'id'});
 
@@ -113,9 +119,19 @@ function ChatRoom(){
 	cSectionDiv.scrollTop = cSectionDiv.scrollHeight;
     
   }
+  //Display all the available chats
+	const [links, setLinks] = useState([]);
+
+
+
+
   //loops over each document, passes document data as the message prop
   //input value binds state to form input
   return(<>
+	<div id='navpanel' className='Navegation-Panel'>
+
+     </div>
+	<div className='divider' id='divider'></div>
 	<div className="Message-UI-Section">
 		   <div className='Chat-Section' id='cssec'>
 				{messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
@@ -137,22 +153,23 @@ function ChatRoom(){
 
 function ChatMessage(props){
 
-  const {text, uid, photoURL} = props.message;
+  const {text,uid, photoURL} = props.message;
 
   const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
   const alignVal = messageClass ==="sent" ? 'right' : 'left';
   return (<>
     <div className = {`message-${messageClass}`} align={alignVal}>
-		    <img src = {photoURL} className='pfp' alt="" width='20' height = '20'/>
-		    <p className='msg-txt'>{text}</p>
+				<div className="msg-bubble">
+				  <p className='msg-txt'>{text}</p>
+				</div>
+				<div className="pfp">
+				  <img src = {photoURL}  alt="" width='40' height = '40'/>
+				</div>
     </div>
   </>)
 }
 
-function GetChats(){
 
-
-}
 
 export default App;
  
