@@ -1,4 +1,5 @@
 import React, {useRef, useState,useEffect} from 'react';
+import ReactDOM from 'react-dom';
 import './App.css';
 
 import firebase from 'firebase/compat/app';
@@ -37,7 +38,7 @@ function App() {
 		<NavBar />
         <div className="Main-Section">
 
-          {user ? <ChatRoom /> : <SignIn />}
+          {user ? <ChatRoom currCID={'CPS1231'}/> : <SignIn />}
         </div>
       </section>
     </div>
@@ -84,19 +85,12 @@ function SignOut(){
   )
 }
 
-function ChatRoom(){
+function ChatRoom(props){
+  const{currCID} = props;
   var cSectionDiv = document.getElementById('cssec');
-  var currCID = 'CPS1231';
   const messagesRef = firestore.collection(`Chats/${currCID}/messages/`);
   const query = messagesRef.orderBy('createdAt');
-  let CIDS = []
-	   firestore.collection("Chats").get()
-	   .then(querySnapshot => {
-		  querySnapshot.forEach(doc => {
-			 CIDS.push(doc.id);
-		  });
-	   });
-	console.log(CIDS);
+
   //reacts to changes in real time
   const [messages] = useCollectionData(query,{idField: 'id'});
 
@@ -122,14 +116,11 @@ function ChatRoom(){
   //Display all the available chats
 	const [links, setLinks] = useState([]);
 
-
-
-
   //loops over each document, passes document data as the message prop
   //input value binds state to form input
   return(<>
 	<div id='navpanel' className='Navegation-Panel'>
-
+		<GetChats />
      </div>
 	<div className='divider' id='divider'></div>
 	<div className="Message-UI-Section">
@@ -169,7 +160,39 @@ function ChatMessage(props){
   </>)
 }
 
+function GetChats(){
+ const chatsRef = firestore.collection('Chats');
+  const query = chatsRef.orderBy('id');
+  const [chats] = useCollectionData(query, { idField: 'id' });
 
+  const handleChatClick = (chatId) => {
+    // pass the clicked chat ID to the ChatRoom component
+    return () => {
+      document.getElementById('divider').style.display = 'block';
+      ReactDOM.render(<ChatRoom currCID={chatId} />, document.getElementById('cssec'));
+    };
+  };
+ 
+  return (<>
+		<div className='panel-option-div'>
+			{chats && chats.map((chat) => (
+			   <div key={chat.id} onClick={handleChatClick(chat.id)}>
+				{chat.name}
+			   </div>
+			))}
+		</div>
 
+  </>)
+
+}
+function changeChats(newCID)
+{
+  var cSectionDiv = document.getElementById('cssec');
+  cSectionDiv.innerHTML = '';
+  console.log(newCID)
+  return(
+		<ChatRoom currCID={newCID} />
+  );
+}
 export default App;
  
