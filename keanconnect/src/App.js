@@ -161,28 +161,30 @@ function ChatMessage(props){
 }
 
 function GetChats(){
- const chatsRef = firestore.collection('Chats');
-  const query = chatsRef.orderBy('id');
-  const [chats] = useCollectionData(query, { idField: 'id' });
 
-  const handleChatClick = (chatId) => {
-    // pass the clicked chat ID to the ChatRoom component
-    return () => {
-      document.getElementById('divider').style.display = 'block';
-      ReactDOM.render(<ChatRoom currCID={chatId} />, document.getElementById('cssec'));
+  const [cids, setCids] = useState([]);
+
+  useEffect(() => {
+    const getCids = async () => {
+      const cidsRef = firestore.collection('Chats');
+      const querySnapshot = await cidsRef.get();
+      const cids = querySnapshot.docs.map((doc) => doc.id);
+      setCids(cids);
     };
-  };
- 
-  return (<>
-		<div className='panel-option-div'>
-			{chats && chats.map((chat) => (
-			   <div key={chat.id} onClick={handleChatClick(chat.id)}>
-				{chat.name}
-			   </div>
-			))}
-		</div>
+    getCids();
+  }, []);
 
-  </>)
+		return (
+		  <div className='panel-option-div'>
+		    <ul>
+			 {cids.map((cid) => (
+			   <li key={cid}>
+				<button id={cid} onclick={changeChats(cid)}>{cid}</button>
+			   </li>
+			 ))}
+		    </ul>
+		  </div>
+		);
 
 }
 function changeChats(newCID)
