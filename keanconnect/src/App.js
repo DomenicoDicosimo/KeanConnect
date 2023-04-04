@@ -36,7 +36,7 @@ function App() {
 
       <section>
 		<NavBar />
-        <div className="Main-Section">
+        <div className="Main-Section" id="mainsec">
 
           {user ? <ChatRoom currCID={'CPS1231'}/> : <SignIn />}
         </div>
@@ -88,7 +88,8 @@ function SignOut(){
 function ChatRoom(props){
   const{currCID} = props;
   var cSectionDiv = document.getElementById('cssec');
-  const messagesRef = firestore.collection(`Chats/${currCID}/messages/`);
+  const messagesRef = firestore.collection(`messages/`);
+  //const messagesRef = firestore.collection(`Chats/${currCID}/messages/`);
   const query = messagesRef.orderBy('createdAt');
 
   //reacts to changes in real time
@@ -127,6 +128,7 @@ function ChatRoom(props){
 		   <div className='Chat-Section' id='cssec'>
 				{messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
 		  </div>
+		<div>
 		   <div className="Message-Section">
 			   <form class="text-container" onSubmit={sendMessage}>
 			   <div class="text-box-div">
@@ -137,6 +139,7 @@ function ChatRoom(props){
 			   </div>
 			   </form>
 		   </div>
+		</div>
 		</div>
   </>
   )
@@ -163,7 +166,7 @@ function ChatMessage(props){
 function GetChats(){
 
   const [cids, setCids] = useState([]);
-
+  const {uid} = auth.currentUser;
   useEffect(() => {
     const getCids = async () => {
       const cidsRef = firestore.collection('Chats');
@@ -179,7 +182,7 @@ function GetChats(){
 		    <ul>
 			 {cids.map((cid) => (
 			   <li key={cid}>
-				<button id={cid} onclick={changeChats(cid)}>{cid}</button>
+				<button className='tablinks' id={cid} >{cid}</button>
 			   </li>
 			 ))}
 		    </ul>
@@ -187,14 +190,14 @@ function GetChats(){
 		);
 
 }
-function changeChats(newCID)
-{
-  var cSectionDiv = document.getElementById('cssec');
-  cSectionDiv.innerHTML = '';
-  console.log(newCID)
-  return(
-		<ChatRoom currCID={newCID} />
-  );
-}
+//function changeChats(newCID)
+//{
+//  var cSectionDiv = document.getElementById('Chat-Section');
+//  cSectionDiv.innerHTML = '';
+//  console.log(newCID)
+//  return(
+//		<ChatRoom currCID={newCID} />
+// );
+//}
 export default App;
  
