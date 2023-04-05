@@ -119,7 +119,7 @@ function ChatPage(props){
   //loops over each document, passes document data as the message prop
   //input value binds state to form input
   return(<>
-		<div id = {currCID} className='tabcontent'>
+		<div id = {currCID} className='tabcontent' Style="display:none;">
 			   <div className="Message-UI-Section">
 				 <div className='Chat-Section' id='cssec'>
 					   {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
@@ -174,7 +174,6 @@ function ChatRoom()
 		  };
 		  getCids();
 		}, []);
-
 		const openChat = (event, chatName) => {
 		  // Hide all tabcontents
 		  const tabcontentList = document.querySelectorAll(".tabcontent");
@@ -193,17 +192,12 @@ function ChatRoom()
 		  event.currentTarget.classList.add("active");
 		  setActiveChat(chatName);
 		};
-
 	return(<>
 	<div id='navpanel' className='Navegation-Panel'>
 		  <div className='panel-option-div'>
-		    <ul>
 			 {cids.map((cid) => (
-			   <li key={cid}>
 				<button className={`tablinks${activeChat === cid ? " active" : ""}`} onClick={(event) => openChat(event,cid)}>{cid}</button>
-			   </li>
 			 ))}
-		    </ul>
 		  </div>
      </div>
 	<div className='divider' id='divider'></div>
@@ -213,22 +207,5 @@ function ChatRoom()
 	</>
   )}
 
-//function openChat(event, chatName) {
-  // Get all elements with class="tabcontent" and hide them
-//  const tabcontentList = document.querySelectorAll(".tabcontent");
-//  tabcontentList.forEach((tabcontent) => {
-//    tabcontent.style.display = "none";
-//  });
-
-  // Get all elements with class="tablinks" and remove the class "active"
-//  const tablinksList = document.querySelectorAll(".tablinks");
-//  tablinksList.forEach((tablink) => {
-//    tablink.className = tablink.className.replace(" active", "");
-//  });
-
-  // Show the current tab, and add an "active" class to the button that opened the tab
-//  document.getElementById(chatName).style.display = "block";
-//  event.currentTarget.className += " active";
-//}
 export default App;
  
