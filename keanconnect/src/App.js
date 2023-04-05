@@ -1,5 +1,4 @@
 import React, {useRef, useState,useEffect} from 'react';
-import ReactDOM from 'react-dom';
 import './App.css';
 
 import firebase from 'firebase/compat/app';
@@ -38,7 +37,7 @@ function App() {
 		<NavBar />
         <div className="Main-Section" id="mainsec">
 
-          {user ? <ChatRoom currCID={'CPS1231'}/> : <SignIn />}
+          {user ? <ChatRoom /> : <SignIn />}
         </div>
       </section>
     </div>
@@ -85,11 +84,11 @@ function SignOut(){
   )
 }
 
-function ChatRoom(props){
+function ChatPage(props){
   const{currCID} = props;
   var cSectionDiv = document.getElementById('cssec');
-  const messagesRef = firestore.collection(`messages/`);
-  //const messagesRef = firestore.collection(`Chats/${currCID}/messages/`);
+  //const messagesRef = firestore.collection(`messages/`);
+  const messagesRef = firestore.collection(`Chats/${currCID}/messages/`);
   const query = messagesRef.orderBy('createdAt');
 
   //reacts to changes in real time
@@ -120,26 +119,22 @@ function ChatRoom(props){
   //loops over each document, passes document data as the message prop
   //input value binds state to form input
   return(<>
-	<div id='navpanel' className='Navegation-Panel'>
-		<GetChats />
-     </div>
-	<div className='divider' id='divider'></div>
-	<div className="Message-UI-Section">
-		   <div className='Chat-Section' id='cssec'>
-				{messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
-		  </div>
-		<div>
-		   <div className="Message-Section">
-			   <form class="text-container" onSubmit={sendMessage}>
-			   <div class="text-box-div">
-			   <input type="textarea" value = {formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Send Message"  cols="20" rows="20" required/>
+		<div id = {currCID} className='tabcontent'>
+			   <div className="Message-UI-Section">
+				 <div className='Chat-Section' id='cssec'>
+					   {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
+				</div>
+				 <div className="Message-Section">
+					 <form class="text-container" onSubmit={sendMessage}>
+					 <div class="text-box-div">
+					 <input type="textarea" value = {formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Send Message"  cols="20" rows="20" required/>
+					 </div>
+					 <div class="submit-button-div">
+					 <button type = "submit" class="submit-btn" disabled={!formValue}>Send</button>
+					 </div>
+					 </form>
+				 </div>
 			   </div>
-			   <div class="submit-button-div">
-			   <button type = "submit" class="submit-btn" disabled={!formValue}>Send</button>
-			   </div>
-			   </form>
-		   </div>
-		</div>
 		</div>
   </>
   )
@@ -163,41 +158,77 @@ function ChatMessage(props){
   </>)
 }
 
-function GetChats(){
 
-  const [cids, setCids] = useState([]);
-  const {uid} = auth.currentUser;
-  useEffect(() => {
-    const getCids = async () => {
-      const cidsRef = firestore.collection('Chats');
-      const querySnapshot = await cidsRef.get();
-      const cids = querySnapshot.docs.map((doc) => doc.id);
-      setCids(cids);
-    };
-    getCids();
-  }, []);
+function ChatRoom()
+{
 
-		return (
+	   const [activeChat, setActiveChat] = useState(null);
+		const [cids, setCids] = useState([]);
+		const {uid} = auth.currentUser;
+		useEffect(() => {
+		  const getCids = async () => {
+		    const cidsRef = firestore.collection('Chats');
+		    const querySnapshot = await cidsRef.get();
+		    const cids = querySnapshot.docs.map((doc) => doc.id);
+		    setCids(cids);
+		  };
+		  getCids();
+		}, []);
+
+		const openChat = (event, chatName) => {
+		  // Hide all tabcontents
+		  const tabcontentList = document.querySelectorAll(".tabcontent");
+		  tabcontentList.forEach((tabcontent) => {
+		    tabcontent.style.display = "none";
+		  });
+
+		  // Remove "active" class from all tablinks
+		  const tablinksList = document.querySelectorAll(".tablinks");
+		  tablinksList.forEach((tablink) => {
+		    tablink.classList.remove("active");
+		  });
+
+		  // Show the current tab, and add an "active" class to the button that opened the tab
+		  document.getElementById(chatName).style.display = "block";
+		  event.currentTarget.classList.add("active");
+		  setActiveChat(chatName);
+		};
+
+	return(<>
+	<div id='navpanel' className='Navegation-Panel'>
 		  <div className='panel-option-div'>
 		    <ul>
 			 {cids.map((cid) => (
 			   <li key={cid}>
-				<button className='tablinks' id={cid} >{cid}</button>
+				<button className={`tablinks${activeChat === cid ? " active" : ""}`} onClick={(event) => openChat(event,cid)}>{cid}</button>
 			   </li>
 			 ))}
 		    </ul>
 		  </div>
-		);
+     </div>
+	<div className='divider' id='divider'></div>
+	   {cids.map((cid) => (
+		  <ChatPage currCID={cid} />
+	   ))}	
+	</>
+  )}
 
-}
-//function changeChats(newCID)
-//{
-//  var cSectionDiv = document.getElementById('Chat-Section');
-//  cSectionDiv.innerHTML = '';
-//  console.log(newCID)
-//  return(
-//		<ChatRoom currCID={newCID} />
-// );
+//function openChat(event, chatName) {
+  // Get all elements with class="tabcontent" and hide them
+//  const tabcontentList = document.querySelectorAll(".tabcontent");
+//  tabcontentList.forEach((tabcontent) => {
+//    tabcontent.style.display = "none";
+//  });
+
+  // Get all elements with class="tablinks" and remove the class "active"
+//  const tablinksList = document.querySelectorAll(".tablinks");
+//  tablinksList.forEach((tablink) => {
+//    tablink.className = tablink.className.replace(" active", "");
+//  });
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+//  document.getElementById(chatName).style.display = "block";
+//  event.currentTarget.className += " active";
 //}
 export default App;
  
