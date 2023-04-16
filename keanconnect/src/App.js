@@ -1,4 +1,5 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState,useEffect} from 'react';
+import ReactDOM from 'react-dom';
 import './App.css';
 
 import firebase from 'firebase/compat/app';
@@ -25,7 +26,7 @@ const firestore = firebase.firestore();
 function App() {
 
   const [user] = useAuthState(auth);
-
+  //const [currentRoom, setCurrentRoom] = useState[""];
   return (
     <div className="App">
       <header>
@@ -35,11 +36,8 @@ function App() {
       <section>
 		<NavBar />
         <div className="Main-Section">
-          <div className='Navegation-Panel'>
-            {
-            }
-          </div>
-          {user ? <ChatRoom /> : <SignIn />}
+
+          {user ? <ChatRoom currCID={'CPS1231'}/> : <SignIn />}
         </div>
       </section>
     </div>
@@ -56,6 +54,10 @@ function NavBar(){
 			 </div>
 			<SignOut/>
 			</div>
+      <div class = "footer">
+      <a href="http://eve.kean.edu/~santosk1/emailtest/contactform.html">Contact Page</a>
+      </div>
+
 		</>
 	   );
 }
@@ -86,9 +88,11 @@ function SignOut(){
   )
 }
 
-function ChatRoom(){
-  const dummy = useRef();
-  const messagesRef = firestore.collection('messages');
+
+function ChatRoom(props){
+  const{currCID} = props;
+  var cSectionDiv = document.getElementById('cssec');
+  const messagesRef = firestore.collection(`Chats/${currCID}/messages/`);
   const query = messagesRef.orderBy('createdAt');
 
   //reacts to changes in real time
@@ -110,48 +114,90 @@ function ChatRoom(){
     })
 
     setFormValue('');
-	dummy.current.scrollIntoView({behavior: 'smooth'});
+	cSectionDiv.scrollTop = cSectionDiv.scrollHeight;
     
   }
+  //Display all the available chats
+	const [links, setLinks] = useState([]);
 
   //loops over each document, passes document data as the message prop
   //input value binds state to form input
   return(<>
-	<div className='Chat-Section'>
-    <main>
-      {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
-
-      <div ref={dummy}></div>
-    </main>
-	</div>
-	<div className="Message-Section">
-		<form class="text-container" onSubmit={sendMessage}>
-		<div class="text-box-div">
-		<input type="textarea" value = {formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Send Message"  cols="20" rows="20" required/>
+	<div id='navpanel' className='Navegation-Panel'>
+		<GetChats />
+     </div>
+	<div className='divider' id='divider'></div>
+	<div className="Message-UI-Section">
+		   <div className='Chat-Section' id='cssec'>
+				{messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
+		  </div>
+		   <div className="Message-Section">
+			   <form class="text-container" onSubmit={sendMessage}>
+			   <div class="text-box-div">
+			   <input type="textarea" value = {formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Send Message"  cols="20" rows="20" required/>
+			   </div>
+			   <div class="submit-button-div">
+			   <button type = "submit" class="submit-btn" disabled={!formValue}>Send</button>
+			   </div>
+			   </form>
+		   </div>
 		</div>
-		<div class="submit-button-div">
-		<button type = "submit" class="submit-btn" disabled={!formValue}>Send</button>
-		</div>
-		</form>
-	</div>
   </>
   )
 }
 
 function ChatMessage(props){
 
-  const {text, uid, photoURL} = props.message;
+  const {text,uid, photoURL} = props.message;
 
   const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
+  const alignVal = messageClass ==="sent" ? 'right' : 'left';
   return (<>
-    <div className = {`message ${messageClass}`}>
-      <img src = {photoURL} alt=""/>
-      <p>{text}</p>
+    <div className = {`message-${messageClass}`} align={alignVal}>
+				<div className="msg-bubble">
+				  <p className='msg-txt'>{text}</p>
+				</div>
+				<div className="pfp">
+				  <img src = {photoURL}  alt="" width='40' height = '40'/>
+				</div>
     </div>
   </>)
 }
 
+function GetChats(){
 
+  const [cids, setCids] = useState([]);
 
+  useEffect(() => {
+    const getCids = async () => {
+      const cidsRef = firestore.collection('Chats');
+      const querySnapshot = await cidsRef.get();
+      const cids = querySnapshot.docs.map((doc) => doc.id);
+      setCids(cids);
+    };
+    getCids();
+  }, []);
+
+		return (
+		  <div className='panel-option-div'>
+		    <ul>
+			 {cids.map((cid) => (
+			   <li key={cid}>
+				<button id={cid} onclick={changeChats(cid)}>{cid}</button>
+			   </li>
+			 ))}
+		    </ul>
+		  </div>
+		);
+
+}
+function changeChats(newCID)
+{
+  var cSectionDiv = document.getElementById('cssec');
+  cSectionDiv.innerHTML = '';
+  console.log(newCID)
+  return(
+		<ChatRoom currCID={newCID} />
+  );
+}
 export default App;
- 
