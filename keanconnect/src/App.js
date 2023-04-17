@@ -142,14 +142,17 @@ function ChatPage(props){
 
 function ChatMessage(props){
 
-  const {text,uid, photoURL} = props.message;
-
+  const {text,createdAt,uid, photoURL} = props.message;
   const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
   const alignVal = messageClass ==="sent" ? 'right' : 'left';
+  //const timeStampDate = createdAt;
+  //const dateInMillis  = timeStampDate.seconds * 1000
+  //var date = new Date(dateInMillis).toLocaleDateString() + '  ' + new Date(dateInMillis).toLocaleTimeString()
   return (<>
     <div className = {`message-${messageClass}`} align={alignVal}>
 				<div className="msg-bubble">
 				  <p className='msg-txt'>{text}</p>
+				  <p>{new Date(createdAt.seconds * 1000).toLocaleDateString() + '  ' + new Date(createdAt.seconds * 1000).toLocaleTimeString()}</p>
 				</div>
 				<div className="pfp">
 				  <img src = {photoURL}  alt="" width='40' height = '40'/>
