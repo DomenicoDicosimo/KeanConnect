@@ -28,11 +28,6 @@ function App() {
   //const [currentRoom, setCurrentRoom] = useState[""];
   return (
     <div className="App">
-      <header>
-        
-		<a href="http://eve.kean.edu/~santosk1/emailtest/contactform.html">Link to other page</a>
-      </header>
-
       <section>
 		<NavBar />
         <div className="Main-Section" id="mainsec">
@@ -46,15 +41,16 @@ function App() {
 
 function NavBar(){
 	   return(
-		<>
-			 <div className='navbar'>
-			 <span className="navText">Kean Connect</span>
-			<div className = "navlogo">
-				<img src="../public/logogreysmall.png"  alt="" />
-			 </div>
-			<SignOut/>
-			</div>
-		</>
+		  <>
+			  <div className='navbar'>
+			  <span className="navText">Kean Connect</span>
+			  <div className = "navlogo">
+			  <img src="../public/logogreysmall.png"  alt="" />
+        <a href="http://eve.kean.edu/~santosk1/emailtest/contactform.html">Contact Us</a>
+			  </div>
+			    <SignOut/>
+			  </div>
+		  </>
 	   );
 }
 function SignIn(){
