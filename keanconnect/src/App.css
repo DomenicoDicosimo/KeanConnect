@@ -14,26 +14,32 @@
   border-right: 5px solid black;
 	display:flex;
 }
+
 .Chat-Section{
-	float:right;
-	width:75%;
-	height:25%;
+	
+	width:100%;
+	height:65%;
 	max-height:85vh;
+	min-height:85vh;
 	overflow: scroll;
 	background-color:gray;
 	border-bottom: 5px solid black;
 	border-left: 5px solid black;
-	display:flex;
+	padding-left: 5%;
+	padding-right: 5%;
 	scroll-behavior: smooth;
 }
-.Message-Section{
+.Message-UI-Section{
 	float:right;
 	width:75%;
-	height:24vh;
+	height:100%;
 	background-color:white;
-	border-bottom: 5px solid black;
-	border-left: 5px solid black;
-	display:flex;
+}
+
+.Message-Section{
+	width:100%;
+	height:35%;
+	background-color:white;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -248,31 +254,100 @@ button {
 
 .text-container input[type=textarea]{
 	width:100%;
-	height: 100%;
-	border: none;
+	height: 10vh;
 	background: #F1F1F1;
+	word-break:break-all;
+	word-wrap:break-word;
+	vertical-align:top;
 }
 .text-container{
 	width:100%;
-	height: 100%;
+	height: fit-content;
 	background: #F1F1F1;
 }
 
 .text-box-div{
 	float:left;
-	width:80%;
+	width:90%;
 	height:100%;
 	background-color:white;
 	display:flex;
+	overflow-wrap:break-word;
+	vertical-align:top;
 }
 .submit-button-div{
 	float:right;
-	width:20%;
+	width:10%;
+	color:#1F355A;
+	background:white;
 	height:100%;
 	display:flex;
 }
 .submit-button-div .submit-btn{
-	backround-color: greenyellow;
 	width:100%;
 	height:100%;
 }
+.submit-button-div .submit-btn:hover{
+	background:#1F355A;
+	color:white;
+}
+.message-sent{
+	   height:auto;
+	   max-width:60%;
+	   min-height:10%;
+	   min-width:5%;
+	   clear:both;
+	   float:right;
+}
+.message-sent .msg-bubble{
+	   height:auto;
+	   max-width:50vh;
+	   min-height:10%;
+	   min-width:5%;
+	   float:left;
+	   color:white;
+	   text-align:left;
+	   background-color:#1F355A;
+	   border-radius: 15px 0px 15px 15px;
+	   padding-bottom:10px;
+	   padding:2px;
+}
+.message-sent .pfp{
+	   float:right;
+}
+
+.msg-txt{
+	   font-weight:bold;
+	word-wrap:break-word;
+}
+.message-received p{
+	display:inline-block;
+}
+.message-received{
+	   height:auto;
+	   max-width:50vh;
+	   float:left;
+	   text-align:left;
+	   min-height:10%;
+	   min-width:5%;
+	   clear:both;
+}
+.message-received .msg-bubble{
+	   float:right;
+	   text-align:left;
+	   background-color:white;
+	   border-radius: 0px 15px 15px 15px;
+	   padding-bottom:10px;
+	   height:auto;
+	   max-width:50vh;
+	   min-height:10%;
+	   min-width:5%;
+
+}
+.message-received .pfp{
+	   float:left;
+}
+
+
+.pfp img{border-radius:50%;}
+
