@@ -1,5 +1,4 @@
 import React, {useRef, useState,useEffect} from 'react';
-import ReactDOM from 'react-dom';
 import './App.css';
 
 import firebase from 'firebase/compat/app';
@@ -29,15 +28,11 @@ function App() {
   //const [currentRoom, setCurrentRoom] = useState[""];
   return (
     <div className="App">
-      <header>
-        
-      </header>
-
       <section>
 		<NavBar />
-        <div className="Main-Section">
+        <div className="Main-Section" id="mainsec">
 
-          {user ? <ChatRoom currCID={'CPS1231'}/> : <SignIn />}
+          {user ? <ChatRoom /> : <SignIn />}
         </div>
       </section>
     </div>
@@ -46,10 +41,10 @@ function App() {
 
 function NavBar(){
 	   return(
-		<>
-			 <div className='navbar'>
+		  <>
+<div className='navbar'>
 			 <span className="navText">Kean Connect</span>
-       <img src="logowhitesmall.png" width="50" LEFT="80"></img>		
+       <img src="logowhitesmall.png" width="50" LEFT="80" ></img>		
        	<div className = "navlogo">
 
         <div classname="navbar">
@@ -61,12 +56,10 @@ function NavBar(){
 
 			</div>
       <div class = "footer">
-      <a href="">Objective </a>
-      <a href="">About Us </a>
+      <a href="http://eve.kean.edu/~santosk1/emailtest/about.html">About Us </a>
       <a href="http://eve.kean.edu/~santosk1/emailtest/contactform.html">Contact Page</a>
       </div>
-
-		</>
+		  </>
 	   );
 }
 function SignIn(){
@@ -96,10 +89,10 @@ function SignOut(){
   )
 }
 
-
-function ChatRoom(props){
+function ChatPage(props){
   const{currCID} = props;
   var cSectionDiv = document.getElementById('cssec');
+  //const messagesRef = firestore.collection(`messages/`);
   const messagesRef = firestore.collection(`Chats/${currCID}/messages/`);
   const query = messagesRef.orderBy('createdAt');
 
@@ -131,24 +124,22 @@ function ChatRoom(props){
   //loops over each document, passes document data as the message prop
   //input value binds state to form input
   return(<>
-	<div id='navpanel' className='Navegation-Panel'>
-		<GetChats />
-     </div>
-	<div className='divider' id='divider'></div>
-	<div className="Message-UI-Section">
-		   <div className='Chat-Section' id='cssec'>
-				{messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
-		  </div>
-		   <div className="Message-Section">
-			   <form class="text-container" onSubmit={sendMessage}>
-			   <div class="text-box-div">
-			   <input type="textarea" value = {formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Send Message"  cols="20" rows="20" required/>
+		<div id = {currCID} className='tabcontent' Style="display:none;">
+			   <div className="Message-UI-Section">
+				 <div className='Chat-Section' id='cssec'>
+					   {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
+				</div>
+				 <div className="Message-Section">
+					 <form class="text-container" onSubmit={sendMessage}>
+					 <div class="text-box-div">
+					 <input type="textarea" value = {formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Send Message"  cols="20" rows="20" required/>
+					 </div>
+					 <div class="submit-button-div">
+					 <button type = "submit" class="submit-btn" disabled={!formValue}>Send</button>
+					 </div>
+					 </form>
+				 </div>
 			   </div>
-			   <div class="submit-button-div">
-			   <button type = "submit" class="submit-btn" disabled={!formValue}>Send</button>
-			   </div>
-			   </form>
-		   </div>
 		</div>
   </>
   )
@@ -156,14 +147,17 @@ function ChatRoom(props){
 
 function ChatMessage(props){
 
-  const {text,uid, photoURL} = props.message;
-
+  const {text,createdAt,uid, photoURL} = props.message;
   const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
   const alignVal = messageClass ==="sent" ? 'right' : 'left';
+  //const timeStampDate = createdAt;
+  //const dateInMillis  = timeStampDate.seconds * 1000
+  //var date = new Date(dateInMillis).toLocaleDateString() + '  ' + new Date(dateInMillis).toLocaleTimeString()
   return (<>
     <div className = {`message-${messageClass}`} align={alignVal}>
 				<div className="msg-bubble">
 				  <p className='msg-txt'>{text}</p>
+				  
 				</div>
 				<div className="pfp">
 				  <img src = {photoURL}  alt="" width='40' height = '40'/>
@@ -172,40 +166,53 @@ function ChatMessage(props){
   </>)
 }
 
-function GetChats(){
 
-  const [cids, setCids] = useState([]);
-
-  useEffect(() => {
-    const getCids = async () => {
-      const cidsRef = firestore.collection('Chats');
-      const querySnapshot = await cidsRef.get();
-      const cids = querySnapshot.docs.map((doc) => doc.id);
-      setCids(cids);
-    };
-    getCids();
-  }, []);
-
-		return (
-		  <div className='panel-option-div'>
-		    <ul>
-			 {cids.map((cid) => (
-			   <li key={cid}>
-				<button id={cid} onclick={changeChats(cid)}>{cid}</button>
-			   </li>
-			 ))}
-		    </ul>
-		  </div>
-		);
-
-}
-function changeChats(newCID)
+function ChatRoom()
 {
-  var cSectionDiv = document.getElementById('cssec');
-  cSectionDiv.innerHTML = '';
-  console.log(newCID)
-  return(
-		<ChatRoom currCID={newCID} />
-  );
-}
+
+	   const [activeChat, setActiveChat] = useState(null);
+		const [cids, setCids] = useState([]);
+		const {uid} = auth.currentUser;
+		useEffect(() => {
+		  const getCids = async () => {
+		    const cidsRef = firestore.collection('Chats');
+		    const querySnapshot = await cidsRef.get();
+		    const cids = querySnapshot.docs.map((doc) => doc.id);
+		    setCids(cids);
+		  };
+		  getCids();
+		}, []);
+		const openChat = (event, chatName) => {
+		  // Hide all tabcontents
+		  const tabcontentList = document.querySelectorAll(".tabcontent");
+		  tabcontentList.forEach((tabcontent) => {
+		    tabcontent.style.display = "none";
+		  });
+
+		  // Remove "active" class from all tablinks
+		  const tablinksList = document.querySelectorAll(".tablinks");
+		  tablinksList.forEach((tablink) => {
+		    tablink.classList.remove("active");
+		  });
+
+		  // Show the current tab, and add an "active" class to the button that opened the tab
+		  document.getElementById(chatName).style.display = "block";
+		  event.currentTarget.classList.add("active");
+		  setActiveChat(chatName);
+		};
+	return(<>
+	<div id='navpanel' className='Navegation-Panel'>
+		  <div className='panel-option-div'>
+			 {cids.map((cid) => (
+				<button className={`tablinks${activeChat === cid ? " active" : ""}`} onClick={(event) => openChat(event,cid)}>{cid}</button>
+			 ))}
+		  </div>
+     </div>
+	<div className='divider' id='divider'></div>
+	   {cids.map((cid) => (
+		  <ChatPage currCID={cid} />
+	   ))}	
+	</>
+  )}
+
 export default App;
