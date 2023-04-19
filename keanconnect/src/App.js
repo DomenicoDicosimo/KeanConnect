@@ -49,12 +49,20 @@ function NavBar(){
 		<>
 			 <div className='navbar'>
 			 <span className="navText">Kean Connect</span>
-			<div className = "navlogo">
+       <img src="logowhitesmall.png" width="50" LEFT="80"></img>		
+       	<div className = "navlogo">
+
+        <div classname="navbar">
+        <a href="">Profile</a>
 				<img src="../public/logogreysmall.png"  alt="" />
 			 </div>
+       </div>
 			<SignOut/>
+
 			</div>
       <div class = "footer">
+      <a href="">Objective </a>
+      <a href="">About Us </a>
       <a href="http://eve.kean.edu/~santosk1/emailtest/contactform.html">Contact Page</a>
       </div>
 
