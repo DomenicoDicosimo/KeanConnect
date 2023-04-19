@@ -42,14 +42,23 @@ function App() {
 function NavBar(){
 	   return(
 		  <>
-			  <div className='navbar'>
-			  <span className="navText">Kean Connect</span>
-			  <div className = "navlogo">
-			  <img src="../public/logogreysmall.png"  alt="" />
-        <a href="http://eve.kean.edu/~santosk1/emailtest/contactform.html">Contact Us</a>
-			  </div>
-			    <SignOut/>
-			  </div>
+<div className='navbar'>
+			 <span className="navText">Kean Connect</span>
+       <img src="logowhitesmall.png" width="50" LEFT="80" ></img>		
+       	<div className = "navlogo">
+
+        <div classname="navbar">
+        <a href="">Profile</a>
+				<img src="../public/logogreysmall.png"  alt="" />
+			 </div>
+       </div>
+			<SignOut/>
+
+			</div>
+      <div class = "footer">
+      <a href="http://eve.kean.edu/~santosk1/emailtest/about.html">About Us </a>
+      <a href="http://eve.kean.edu/~santosk1/emailtest/contactform.html">Contact Page</a>
+      </div>
 		  </>
 	   );
 }
@@ -148,7 +157,7 @@ function ChatMessage(props){
     <div className = {`message-${messageClass}`} align={alignVal}>
 				<div className="msg-bubble">
 				  <p className='msg-txt'>{text}</p>
-				  <p>{new Date(createdAt.seconds * 1000).toLocaleDateString() + '  ' + new Date(createdAt.seconds * 1000).toLocaleTimeString()}</p>
+				  
 				</div>
 				<div className="pfp">
 				  <img src = {photoURL}  alt="" width='40' height = '40'/>
@@ -207,4 +216,3 @@ function ChatRoom()
   )}
 
 export default App;
- 
