@@ -363,9 +363,6 @@ button {
 	   font-weight:bold;
 	word-wrap:break-word;
 }
-.message-received p{
-	display:inline-block;
-}
 .message-received{
 	   height:auto;
 	   max-width:50vh;
@@ -381,7 +378,7 @@ button {
 	   float:right;
 	   text-align:left;
 	   background-color:white;
-	   border-radius: 40px 15px 15px 40px;
+	   border-radius: 15px 40px 40px 15px;
 	   padding:10px;
 	   height:auto;
 	   max-width:50vh;

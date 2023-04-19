@@ -46,7 +46,8 @@ function NavBar(){
 			  <span className="navText">Kean Connect</span>
 			  <div className = "navlogo">
 			  <img src="../public/logogreysmall.png"  alt="" />
-        <a href="http://eve.kean.edu/~santosk1/emailtest/contactform.html">Contact Us</a>
+        <a href="http://eve.kean.edu/~santosk1/emailtest/contactform.html">Contact</a>
+		<a href="http://eve.kean.edu/~santosk1/emailtest/about.html">About</a>
 			  </div>
 			    <SignOut/>
 			  </div>
@@ -148,7 +149,6 @@ function ChatMessage(props){
     <div className = {`message-${messageClass}`} align={alignVal}>
 				<div className="msg-bubble">
 				  <p className='msg-txt'>{text}</p>
-				  <p>{new Date(createdAt.seconds * 1000).toLocaleDateString() + '  ' + new Date(createdAt.seconds * 1000).toLocaleTimeString()}</p>
 				</div>
 				<div className="pfp">
 				  <img src = {photoURL}  alt="" width='40' height = '40'/>
